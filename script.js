@@ -1,15 +1,15 @@
-// 1. 获取页面中的音频元素
+// ================= 音频系统 =================
 const bgm = document.getElementById('gameBgm');
 const clickAudio = document.getElementById('clickSound');
 
-// 2. 监听玩家的第一次点击行为，播放BGM
+// 监听玩家的第一次点击行为，播放BGM
 document.body.addEventListener('click', function() {
     if (bgm && bgm.paused) {
         bgm.play().catch(e => console.log("BGM等待交互中..."));
     }
 }, { once: true });
 
-// 3. 封装一个专门播放点击音效的函数
+// 封装播放点击音效的函数
 function playClickSound() {
     if (clickAudio) {
         clickAudio.currentTime = 0; // 进度归零，支持快速连点
@@ -17,38 +17,60 @@ function playClickSound() {
     }
 }
 
-// 4. 按钮的具体功能逻辑
-// ====== 模拟当前游戏状态 ======
-// 实际游戏中，这会随着玩家点击对话而改变
+
+// ================= 模拟当前游戏状态 =================
 let currentGameState = {
-    bgImage: 'bg.png',  // 当前画面的背景图
-    chapter: '序章：搞笑的相遇' // 当前剧情进度
+    bgImage: 'bg.png',  // 当前画面的背景图 (存档时会记录这个)
+    chapter: '序章' 
 };
 
 // 当前打开的面板模式 ('save' 还是 'load')
 let menuMode = ''; 
 
-// ==================== 菜单按钮功能 ====================
 
+// ================= 菜单按钮功能 =================
 function startGame() {
-    alert('进入游戏！现在你可以按 Esc 或者点菜单来存档了。');
-    // 这里可以写切换到对话界面的代码
+    playClickSound();
+    setTimeout(() => { 
+        alert('进入游戏！现在你可以按 Esc 或者点菜单来存档了。'); 
+    }, 100);
 }
 
 function loadGame() {
-    openSaveLoadMenu('load'); // 打开读档面板
+    playClickSound();
+    setTimeout(() => { 
+        openSaveLoadMenu('load'); 
+    }, 100);
 }
 
 function continueGame() {
-    // 读取最新存档的功能可以留到以后完善，这里先打开读档面板
-    openSaveLoadMenu('load'); 
+    playClickSound();
+    setTimeout(() => { 
+        openSaveLoadMenu('load'); 
+    }, 100);
 }
 
-function flowchart() { alert('流程图功能开发中...'); }
-function settings() { alert('设置功能开发中...'); }
-function exitGame() { if(confirm('确定退出吗？')) alert('已退出'); }
+function flowchart() {
+    playClickSound();
+    setTimeout(() => { alert('打开【流程图】界面...'); }, 100);
+}
 
-// ==================== 存档与读档核心逻辑 ====================
+function settings() {
+    playClickSound();
+    setTimeout(() => { alert('打开【系统设置】面板 (音量、分辨率、文字速度等)...'); }, 100);
+}
+
+function exitGame() {
+    playClickSound();
+    setTimeout(() => { 
+        if(confirm('确定要退出游戏吗？未保存的进度将会丢失。')) {
+            alert('游戏已结束。');
+        }
+    }, 100);
+}
+
+
+// ================= 存档与读档核心逻辑 =================
 
 // 打开面板
 function openSaveLoadMenu(mode) {
@@ -64,6 +86,7 @@ function openSaveLoadMenu(mode) {
 
 // 关闭面板
 function closeSaveLoadMenu() {
+    playClickSound();
     document.getElementById('saveLoadOverlay').classList.remove('active');
 }
 
@@ -76,9 +99,9 @@ function refreshSlots() {
         let infoEl = document.getElementById('slot-info-' + i);
 
         if (savedData) {
-            // 如果有存档，解析JSON数据并显示
+            // 如果有存档，解析数据并显示
             let data = JSON.parse(savedData);
-            imgEl.src = data.bgImage; // 显示那一帧（背景图）
+            imgEl.src = data.bgImage; // 显示保存的那一帧（背景图）
             imgEl.style.display = 'block';
             infoEl.innerText = data.time; // 显示保存时间
         } else {
@@ -92,52 +115,50 @@ function refreshSlots() {
 
 // 点击具体的存档槽位 (1, 2 或 3)
 function handleSlotClick(slotId) {
-    if (menuMode === 'save') {
-        // ========== 执行存档逻辑 ==========
-        // 获取当前时间
-        let now = new Date();
-        let timeString = now.getMonth() + 1 + '/' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
-        
-        // 打包当前状态
-        let saveData = {
-            bgImage: currentGameState.bgImage,
-            chapter: currentGameState.chapter,
-            time: timeString
-        };
-        
-        // 存入浏览器
-        localStorage.setItem('galgame_save_' + slotId, JSON.stringify(saveData));
-        
-        // 音效提示 (如果你搞定了音效的话)
-        // playClickSound(); 
-        
-        alert(`已保存至槽位 ${slotId}！`);
-        refreshSlots(); // 刷新画面显示刚刚存的图
+    playClickSound();
 
-    } else if (menuMode === 'load') {
-        // ========== 执行读档逻辑 ==========
-        let savedData = localStorage.getItem('galgame_save_' + slotId);
-        if (savedData) {
-            let data = JSON.parse(savedData);
-            // 恢复游戏状态
-            currentGameState.bgImage = data.bgImage;
-            currentGameState.chapter = data.chapter;
+    // 延迟一点执行，防止音效被阻塞
+    setTimeout(() => {
+        if (menuMode === 'save') {
+            // ========== 执行存档 ==========
+            let now = new Date();
+            let timeString = (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
             
-            // 改变真实的网页背景来模拟读档成功
-            document.querySelector('.game-container').style.backgroundImage = `url('${data.bgImage}')`;
+            let saveData = {
+                bgImage: currentGameState.bgImage,
+                chapter: currentGameState.chapter,
+                time: timeString
+            };
             
-            alert(`已读取进度：${data.time}`);
-            closeSaveLoadMenu();
-        } else {
-            alert('这个槽位是空的，无法读取！');
+            localStorage.setItem('galgame_save_' + slotId, JSON.stringify(saveData));
+            alert(`已保存至槽位 ${slotId}！`);
+            refreshSlots(); 
+
+        } else if (menuMode === 'load') {
+            // ========== 执行读档 ==========
+            let savedData = localStorage.getItem('galgame_save_' + slotId);
+            if (savedData) {
+                let data = JSON.parse(savedData);
+                
+                // 恢复状态
+                currentGameState.bgImage = data.bgImage;
+                currentGameState.chapter = data.chapter;
+                
+                // 改变真实的网页背景来模拟读档成功
+                document.querySelector('.game-container').style.backgroundImage = `url('${data.bgImage}')`;
+                
+                alert(`已读取进度：${data.time}`);
+                closeSaveLoadMenu();
+            } else {
+                alert('这个槽位是空的，无法读取！');
+            }
         }
-    }
+    }, 100);
 }
 
 // 绑定键盘 Esc 键，用来随时呼出【保存游戏】面板
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
-        // 如果当前没打开面板，按 Esc 就打开存档面板
         const overlay = document.getElementById('saveLoadOverlay');
         if (!overlay.classList.contains('active')) {
             openSaveLoadMenu('save');
