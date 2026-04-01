@@ -65,3 +65,87 @@ body {
     color: #ff4500; /* 鼠标放上去变亮 */
     transform: translateX(15px); /* 鼠标悬停时整个按钮向右平移一点，增加互动反馈 */
 }
+
+/* ================= 存档/读档 界面样式 ================= */
+.save-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85); /* 半透明黑色背景遮罩 */
+    display: none; /* 默认隐藏 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100; /* 确保它盖在所有东西上面 */
+}
+
+/* 当添加 active 类时显示 */
+.save-overlay.active {
+    display: flex;
+}
+
+.slot-container {
+    display: flex;
+    gap: 30px;
+}
+
+/* 存档槽位外观 */
+.save-slot {
+    width: 240px;
+    height: 180px;
+    background: #222;
+    border: 3px solid #8b3a2b;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.save-slot:hover {
+    transform: scale(1.05); /* 鼠标悬浮放大 */
+    border-color: #ff4500;
+}
+
+/* 缩略图区域 */
+.slot-img-box {
+    width: 100%;
+    height: 130px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slot-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 保证图片填满且不变形 */
+    display: none; /* 如果没有图片则隐藏 */
+}
+
+/* 存档文字信息 */
+.slot-info {
+    color: #fff;
+    text-align: center;
+    padding: 10px 5px;
+    font-size: 14px;
+    font-family: monospace; /* 用等宽字体显示时间比较好看 */
+}
+
+/* 返回按钮 */
+.close-btn {
+    margin-top: 40px;
+    padding: 10px 40px;
+    font-size: 20px;
+    background: #8b3a2b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #ff4500;
+}
