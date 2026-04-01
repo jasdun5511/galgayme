@@ -22,7 +22,30 @@
         
     </div>
 
-    <audio id="gameBgm" src="bgm.mp3" loop preload="auto"></audio>
+    <div id="saveLoadOverlay" class="save-overlay">
+        <h2 id="saveLoadTitle" style="color: white; margin-bottom: 20px;">存档 / 读档</h2>
+        
+        <div class="slot-container">
+            <div class="save-slot" onclick="handleSlotClick(1)">
+                <div class="slot-img-box"><img id="slot-img-1" src="" alt="空槽位"></div>
+                <div class="slot-info" id="slot-info-1">空存档</div>
+            </div>
+            <div class="save-slot" onclick="handleSlotClick(2)">
+                <div class="slot-img-box"><img id="slot-img-2" src="" alt="空槽位"></div>
+                <div class="slot-info" id="slot-info-2">空存档</div>
+            </div>
+            <div class="save-slot" onclick="handleSlotClick(3)">
+                <div class="slot-img-box"><img id="slot-img-3" src="" alt="空槽位"></div>
+                <div class="slot-info" id="slot-info-3">空存档</div>
+            </div>
+        </div>
+
+        <button class="close-btn" onclick="closeSaveLoadMenu()">返回游戏</button>
+    </div>
+
+    <audio id="gameBgm" src="bgm.ogg" loop preload="auto"></audio>
+
+    <audio id="clickSound" src="click.ogg" preload="auto"></audio>
 
     <script src="script.js"></script>
 </body>
