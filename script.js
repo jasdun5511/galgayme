@@ -1,138 +1,141 @@
-// 获取音频元素
+// ==================== 音频逻辑 (仅保留 BGM) ====================
 const bgm = document.getElementById('gameBgm');
 
-// 游戏当前状态
-let currentGameState = { bgImage: 'bg.png', chapter: '序章' };
-let menuMode = ''; 
-
-// ================= 音频逻辑 (仅保留BGM) =================
-
-/**
- * 核心执行函数：处理点击动作并确保BGM在弹窗后能恢复
- */
-function triggerAction(callback) {
-    // 1. 如果 BGM 正在播，先把它停掉，防止被 alert 阻塞导致异常
-    if (bgm && !bgm.paused) {
-        bgm.pause();
-    }
-
-    // 2. 执行业务逻辑 (弹窗等)
-    if (callback) callback();
-
-    // 3. 逻辑执行完（比如你关掉 alert 后），重新恢复 BGM
-    if (bgm) {
-        bgm.play().catch(e => console.log("BGM恢复失败"));
-    }
-}
-
-// 针对第一次进入页面，必须点一下才能播音乐
+// 监听玩家在页面的第一次点击，用来启动背景音乐
 document.body.addEventListener('click', function() {
     if (bgm && bgm.paused) {
-        bgm.play().catch(e => {});
+        bgm.play().catch(e => console.log("等待交互以启动 BGM"));
     }
 }, { once: true });
 
 
-// ================= 菜单按钮功能 =================
+// ==================== 以下为你提供的完整存档与功能代码（未作任何删减） ====================
+
+// ====== 模拟当前游戏状态 ======
+// 实际游戏中，这会随着玩家点击对话而改变
+let currentGameState = {
+    bgImage: 'bg.png',  // 当前画面的背景图
+    chapter: '序章：搞笑的相遇' // 当前剧情进度
+};
+
+// 当前打开的面板模式 ('save' 还是 'load')
+let menuMode = ''; 
+
+// ==================== 菜单按钮功能 ====================
 
 function startGame() {
-    triggerAction(() => {
-        alert('新游戏开始！');
-    });
+    alert('进入游戏！现在你可以按 Esc 或者点菜单来存档了。');
+    // 这里可以写切换到对话界面的代码
 }
 
 function loadGame() {
-    triggerAction(() => {
-        openSaveLoadMenu('load');
-    });
+    openSaveLoadMenu('load'); // 打开读档面板
 }
 
 function continueGame() {
-    triggerAction(() => {
-        openSaveLoadMenu('load');
-    });
+    // 读取最新存档的功能可以留到以后完善，这里先打开读档面板
+    openSaveLoadMenu('load'); 
 }
 
-function flowchart() {
-    triggerAction(() => { alert('流程图功能开发中...'); });
-}
+function flowchart() { alert('流程图功能开发中...'); }
+function settings() { alert('设置功能开发中...'); }
+function exitGame() { if(confirm('确定退出吗？')) alert('已退出'); }
 
-function settings() {
-    triggerAction(() => { alert('设置面板开发中...'); });
-}
+// ==================== 存档与读档核心逻辑 ====================
 
-function exitGame() {
-    triggerAction(() => {
-        if(confirm('确定要退出游戏吗？')) {
-            alert('感谢游玩！');
-        }
-    });
-}
-
-
-// ================= 存档/读档 逻辑 =================
-
+// 打开面板
 function openSaveLoadMenu(mode) {
     menuMode = mode;
-    document.getElementById('saveLoadTitle').innerText = mode === 'save' ? '【 保存游戏 】' : '【 读取游戏 】';
-    document.getElementById('saveLoadOverlay').classList.add('active');
-    refreshSlots();
+    const overlay = document.getElementById('saveLoadOverlay');
+    const title = document.getElementById('saveLoadTitle');
+    
+    title.innerText = mode === 'save' ? '【 保存游戏 】' : '【 读取游戏 】';
+    overlay.classList.add('active'); // 显示遮罩层
+    
+    refreshSlots(); // 刷新显示的存档数据
 }
 
+// 关闭面板
 function closeSaveLoadMenu() {
-    triggerAction(() => {
-        document.getElementById('saveLoadOverlay').classList.remove('active');
-    });
+    document.getElementById('saveLoadOverlay').classList.remove('active');
 }
 
+// 刷新槽位显示
 function refreshSlots() {
     for (let i = 1; i <= 3; i++) {
+        // 从浏览器本地存储读取数据
         let savedData = localStorage.getItem('galgame_save_' + i);
         let imgEl = document.getElementById('slot-img-' + i);
         let infoEl = document.getElementById('slot-info-' + i);
+
         if (savedData) {
+            // 如果有存档，解析JSON数据并显示
             let data = JSON.parse(savedData);
-            imgEl.src = data.bgImage;
+            imgEl.src = data.bgImage; // 显示那一帧（背景图）
             imgEl.style.display = 'block';
-            infoEl.innerText = data.time;
+            infoEl.innerText = data.time; // 显示保存时间
         } else {
+            // 如果没存档
+            imgEl.src = '';
             imgEl.style.display = 'none';
-            infoEl.innerText = 'NO DATA';
+            infoEl.innerText = 'NO DATA (空存档)';
         }
     }
 }
 
+// 点击具体的存档槽位 (1, 2 或 3)
 function handleSlotClick(slotId) {
-    triggerAction(() => {
-        if (menuMode === 'save') {
-            let now = new Date();
-            let timeString = (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-            let saveData = { bgImage: currentGameState.bgImage, time: timeString };
-            localStorage.setItem('galgame_save_' + slotId, JSON.stringify(saveData));
-            alert(`已保存至槽位 ${slotId}`);
-            refreshSlots();
-        } else {
-            let savedData = localStorage.getItem('galgame_save_' + slotId);
-            if (savedData) {
-                let data = JSON.parse(savedData);
-                document.querySelector('.game-container').style.backgroundImage = `url('${data.bgImage}')`;
-                alert('读档成功！');
-                document.getElementById('saveLoadOverlay').classList.remove('active');
-            } else {
-                alert('槽位为空！');
-            }
-        }
-    });
-}
+    if (menuMode === 'save') {
+        // ========== 执行存档逻辑 ==========
+        // 获取当前时间
+        let now = new Date();
+        let timeString = now.getMonth() + 1 + '/' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
+        
+        // 打包当前状态
+        let saveData = {
+            bgImage: currentGameState.bgImage,
+            chapter: currentGameState.chapter,
+            time: timeString
+        };
+        
+        // 存入浏览器
+        localStorage.setItem('galgame_save_' + slotId, JSON.stringify(saveData));
+        
+        // 音效提示 (如果你搞定了音效的话)
+        // playClickSound(); 
+        
+        alert(`已保存至槽位 ${slotId}！`);
+        refreshSlots(); // 刷新画面显示刚刚存的图
 
-// Esc 键呼出存档
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const overlay = document.getElementById('saveLoadOverlay');
-        if (overlay.classList.contains('active')) {
+    } else if (menuMode === 'load') {
+        // ========== 执行读档逻辑 ==========
+        let savedData = localStorage.getItem('galgame_save_' + slotId);
+        if (savedData) {
+            let data = JSON.parse(savedData);
+            // 恢复游戏状态
+            currentGameState.bgImage = data.bgImage;
+            currentGameState.chapter = data.chapter;
+            
+            // 改变真实的网页背景来模拟读档成功
+            document.querySelector('.game-container').style.backgroundImage = `url('${data.bgImage}')`;
+            
+            alert(`已读取进度：${data.time}`);
             closeSaveLoadMenu();
         } else {
+            alert('这个槽位是空的，无法读取！');
+        }
+    }
+}
+
+// 绑定键盘 Esc 键，用来随时呼出【保存游戏】面板
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        // 如果当前没打开面板，按 Esc 就打开存档面板
+        const overlay = document.getElementById('saveLoadOverlay');
+        if (!overlay.classList.contains('active')) {
             openSaveLoadMenu('save');
+        } else {
+            closeSaveLoadMenu();
         }
     }
 });
