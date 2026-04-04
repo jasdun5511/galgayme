@@ -1,3 +1,4 @@
+/* 清除浏览器默认边距 */
 * {
     margin: 0;
     padding: 0;
@@ -5,71 +6,62 @@
 }
 
 body {
-    font-family: 'Microsoft YaHei', sans-serif; 
+    /* Galgame 常用的中文字体 */
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif; 
     background-color: #000;
-    overflow: hidden;
+    overflow: hidden; /* 防止出现滚动条影响游戏体验 */
 }
 
 .game-container {
     width: 100vw;
     height: 100vh;
+    /* 引入你的背景图片，确保图片和css文件在同一相对路径或正确指向 */
     background-image: url('bg.png'); 
-    background-size: cover;      
-    background-position: center; 
+    background-size: cover;      /* 让图片铺满整个屏幕 */
+    background-position: center; /* 图片居中对齐 */
     position: relative;
 }
 
+/* 左侧菜单定位 */
 .menu {
     position: absolute;
-    left: 5%; 
-    top: 30%; 
+    left: 5%; /* 距离左侧边缘的距离 */
+    top: 30%; /* 距离顶部边缘的距离，根据原图大概在中间偏上的位置 */
     width: 250px;
 }
 
-.menu ul { list-style: none; }
-.menu li { margin-bottom: 35px; }
+.menu ul {
+    list-style: none; /* 去除列表默认的圆点 */
+}
 
+.menu li {
+    margin-bottom: 35px; /* 控制每个选项之间的垂直间距 */
+}
+
+/* 按钮基础样式 */
 .menu button {
     background: none;
     border: none;
-    color: #8b3a2b; 
+    color: #8b3a2b; /* 提取原图中的深红/棕色 */
     font-size: 26px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease; /* 添加动画过渡效果 */
+    /* 添加文字白边，防止在复杂背景下看不清文字 */
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-.menu button span { margin-right: 15px; font-size: 22px; color: #c95b3f; }
-.menu button:hover { color: #ff4500; transform: translateX(15px); }
-
-.save-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
+/* 按钮旁边的图标样式 */
+.menu button span {
+    margin-right: 15px;
+    font-size: 22px;
+    color: #c95b3f; /* 图标颜色稍微区分开 */
 }
 
-.save-overlay.active { display: flex; }
-.slot-container { display: flex; gap: 30px; }
-
-.save-slot {
-    width: 240px; height: 180px;
-    background: #222; border: 3px solid #8b3a2b;
-    border-radius: 8px; cursor: pointer;
-    overflow: hidden; transition: transform 0.2s;
+/* 鼠标悬停时的特效（Hover） */
+.menu button:hover {
+    color: #ff4500; /* 鼠标放上去变亮 */
+    transform: translateX(15px); /* 鼠标悬停时整个按钮向右平移一点，增加互动反馈 */
 }
-
-.save-slot:hover { transform: scale(1.05); border-color: #ff4500; }
-
-.slot-img-box { width: 100%; height: 130px; background: #111; display: flex; align-items: center; justify-content: center; }
-.slot-img-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
-.slot-info { color: #fff; text-align: center; padding: 10px 5px; font-size: 14px; }
-
-.close-btn { margin-top: 40px; padding: 10px 40px; font-size: 20px; background: #8b3a2b; color: white; border: none; border-radius: 5px; cursor: pointer; }
