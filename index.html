@@ -3,26 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galgame 主菜单</title>
+    <title>Galgame (恶搞同学版)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
         
-        <nav class="menu">
-            <ul>
-                <li><button onclick="startGame()"><span>*</span> 新游戏</button></li>
-                <li><button onclick="loadGame()"><span>-</span> 读取存档</button></li>
-                <li><button onclick="continueGame()"><span>|</span> 继续游戏</button></li>
-                <li><button onclick="flowchart()"><span>∴</span> 流程图</button></li>
-                <li><button onclick="settings()"><span>⚙</span> 系统设置</button></li>
-                <li><button onclick="exitGame()"><span>⏻</span> 结束游戏</button></li>
-            </ul>
-        </nav>
+        <div id="menu-layer" class="layer">
+            <nav class="menu">
+                <ul>
+                    <li><button onclick="startGame()"><span>*</span> 新游戏</button></li>
+                    <li><button onclick="loadGame()"><span>-</span> 读取存档</button></li>
+                    <li><button onclick="continueGame()"><span>|</span> 继续游戏</button></li>
+                    <li><button onclick="flowchart()"><span>∴</span> 流程图</button></li>
+                    <li><button onclick="settings()"><span>⚙</span> 系统设置</button></li>
+                    <li><button onclick="exitGame()"><span>⏻</span> 结束游戏</button></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="gameplay-layer" class="layer hidden">
+            <div class="dialogue-box">
+                <div class="name-tag">
+                    <span id="speakerName">齐千玖</span> 
+                </div>
+                
+                <div class="text-content">
+                    <p id="dialogueText"></p> 
+                    <span class="next-arrow">▶</span>
+                </div>
+                
+                <div class="quick-menu">
+                    <button>SAVE</button>
+                    <button>LOAD</button>
+                    <button>LOG</button>
+                    <button>AUTO</button>
+                    <button>SKIP</button>
+                    <button>CONFIG</button>
+                </div>
+            </div>
+        </div>
         
     </div>
 
-    <audio id="gameBgm" src="bgm.mp3" loop preload="auto"></audio>
+    <audio id="gameBgm" loop preload="auto"></audio>
 
     <script src="script.js"></script>
 </body>
