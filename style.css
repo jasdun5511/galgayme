@@ -89,87 +89,98 @@ body {
 }
 
 /* ==============================
-   3. 游戏对话框样式 (Dialogue Box)
+   3. 游戏对话框样式 (Dialogue Box) - 精确还原版
    ============================== */
 #gameplay-layer {
     z-index: 5;
-    cursor: pointer; /* 整个游戏层可点击以推进对话 */
+    cursor: pointer; 
 }
 
-/* 对话框主容器 */
+/* 对话框主容器：贴底、满宽、向上渐变 */
 .dialogue-box {
     position: absolute;
-    bottom: 5vh; 
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70vw; 
-    min-height: 160px; 
-    background-color: rgba(0, 0, 0, 0.7); 
-    border-radius: 12px;
-    padding: 25px 35px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    font-size: 22px; 
-    line-height: 1.6;
-    color: #fff;
-    text-align: left;
+    bottom: 0; 
+    left: 0;
+    width: 100%; 
+    height: 35vh; /* 占据屏幕下方约三分之一的高度 */
+    /* 从纯黑向上渐变到透明 */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%); 
+    padding: 0 5vw; /* 左右留出一点内边距 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 内容靠下对齐 */
+    padding-bottom: 40px; /* 距离底部的留白 */
     z-index: 100;
 }
 
 /* 角色名字标签 (Name Tag) */
 .name-tag {
     position: absolute;
-    top: -22px; 
-    left: 20px;
-    padding: 5px 20px;
-    background-color: rgba(0, 0, 0, 0.85); 
-    border-radius: 10px;
-    font-size: 19px;
-    color: #ccc;
-    white-space: nowrap; 
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    top: 30%; /* 定位在渐变区域的偏上方 */
+    left: 5vw;
+    padding: 3px 20px;
+    background-color: rgba(20, 20, 20, 0.7); /* 深色半透明底 */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* 淡淡的边框感 */
+    border-radius: 2px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #eee;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
 /* 文本内容区域 (Text Content) */
 .text-content {
-    margin-top: 25px; 
-    margin-bottom: 25px; 
+    width: 85%; /* 限制文字宽度，不让它顶到最右边 */
+    margin-bottom: 10px;
+}
+
+#dialogueText {
+    display: inline;
+    font-size: 18px; /* 调整字号 */
+    font-weight: 600; /* 加粗字体解决“太细”的问题 */
+    color: #f0f0f0;
+    line-height: 1.8; /* 调整行间距 */
+    letter-spacing: 1px; /* 增加一点字间距 */
+    text-shadow: 1px 1px 2px #000; /* 加一点黑色文字阴影，防止背景亮时看不清 */
 }
 
 /* 继续箭头 (Next Arrow) */
 .next-arrow {
     display: inline-block;
-    margin-left: 10px;
-    color: #4da6ff; 
-    font-size: 1.2em;
-    vertical-align: middle;
+    margin-left: 8px;
+    color: #5da9d4; /* 截图中的浅蓝色 */
+    font-size: 18px;
+    vertical-align: baseline;
     animation: arrowBlink 0.8s infinite alternate;
 }
 
 @keyframes arrowBlink {
-    from { opacity: 0.1; }
-    to { opacity: 1; }
+    from { opacity: 0.2; transform: translateX(0); }
+    to { opacity: 1; transform: translateX(3px); }
 }
 
 /* 底部功能按钮 (Quick Menu) */
 .quick-menu {
     position: absolute;
-    bottom: 12px;
-    right: 25px;
+    bottom: 15px;
+    right: 5vw;
     display: flex;
-    gap: 15px;
+    gap: 12px;
 }
 
 .quick-menu button {
     background: none;
     border: none;
-    color: #aaa; 
-    font-size: 15px;
+    color: #999; 
+    font-size: 12px; /* 原图的按钮字很小 */
+    font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
     text-transform: uppercase;
-    padding: 2px;
     transition: color 0.2s;
 }
 
 .quick-menu button:hover {
     color: #fff;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
 }
