@@ -17,10 +17,10 @@ const scenarios = {
         bgm: 'bgm.mp3'
     },
     "scene1": { // 【场景 1】 (校门口 - 经典开局立Flag)
-        background: 'scene1_gate.png', 
+        background: 'scene1_gate.png', // 占位图：校门口
         bgm: 'scene1_bgm.mp3',         
+        nextScene: 'scene2', // 【新增】播完后自动跳转到 scene2
         dialogue: [
-            // name 留空，系统就会自动判定为旁白/心里话并隐藏名字框
             { name: '', text: '清晨的阳光不算刺眼，学校门口挤满了刚返校的学生。' },
             { name: '', text: '有穿着旧校服的高二高三学长学姐，也有和我一样、手里攥着新生报到单、背着满满当当双肩包的高一新生。' },
             { name: '', text: '我叫子涵。此时正背着装满新课本的书包，捏着皱巴巴的报到单，站在高中校门口。' },
@@ -31,12 +31,83 @@ const scenarios = {
             { name: '', text: '“谈一场纯纯的、普普通通的校园恋爱，放学一起走出校门，课间能说说话，这日子就太完美了！”' },
             { name: '', text: '带着这样美好的期盼，我迈开步子进入了学校。' }
         ]
+    },
+    "scene2": { // 【场景 2】 (看公告栏 - 赶时间)
+        background: 'scene2_notice.jpg', // 占位图：公告栏
+        bgm: 'scene1_bgm.mp3', // 可以保持同一首BGM，或者换一首略带急促的
+        nextScene: 'scene3', // 播完后自动跳转到 scene3
+        dialogue: [
+            { name: '', text: '我盯着校门口墙上的报到指引，高一新生要去教学楼三楼的教室报到。' },
+            { name: '', text: '而且班主任说八点半就截止签到，再磨蹭就要迟到挨批了。' },
+            { name: '', text: '当下也顾不上打量身边路过的女同学，赶紧把报到单塞进书包侧兜。' },
+            { name: '', text: '低着头，加快脚步往校门里冲。' },
+            { name: '', text: '心里还不停念叨：“先顺利报到，找好教室，恋爱这事慢慢来，咱先做个听话的好学生！”' }
+        ]
+    },
+    "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
+        background: 'scene3_corridor.jpg', // 占位图：教学楼走廊转角
+        bgm: 'scene2_bump.mp3', // 建议在这里换一首音乐，或者加个音效
+        nextScene: null, // 暂时没有后续场景，播完退回主菜单
+        dialogue: [
+            { name: '', text: '我只顾着低头看路，避开扎堆聊天的同学……' },
+            { name: '', text: '没留意教室门内侧、入口的转角处。' },
+            { name: '', text: '“砰——！”' }, // 自己加了个语气词增加画面感
+            { name: '', text: '突然狠狠撞上了一堵又高又挺、带着温热体温的结实胸膛！' }
+        ]
     }
 };
 
 // 游戏状态变量
 let currentSceneId = null;
 let currentLineIndex = 0;
+
+
+// ==============================
+// 以下是需要替换的 showNextDialogueLine 函数
+// ==============================
+
+// 推进下一条对话
+function showNextDialogueLine() {
+    const scene = scenarios[currentSceneId];
+    
+    // 如果当前场景的对话已经播放完毕
+    if (!scene || currentLineIndex >= scene.dialogue.length) {
+        console.log(`场景 [${currentSceneId}] 结束。`);
+        
+        // 【新增逻辑】判断是否有下一个场景
+        if (scene && scene.nextScene) {
+            console.log(`跳转到下一幕: ${scene.nextScene}`);
+            loadScene(scene.nextScene); // 直接加载下一个场景
+        } else {
+            // 如果没有下一个场景了，退回主菜单
+            console.log("全部剧情结束，返回主菜单。");
+            gameplayLayer.classList.add('hidden');
+            menuLayer.classList.remove('hidden');
+            bgm.src = scenarios["main_menu"].bgm;
+            bgm.play();
+            currentSceneId = null;
+            currentLineIndex = 0;
+        }
+        return;
+    }
+
+    const currentLine = scene.dialogue[currentLineIndex];
+
+    // 判断是否显示名字框 (有名字且不为空时显示)
+    if (currentLine.name && currentLine.name.trim() !== "") {
+        nameTagContainer.style.display = 'block';
+        if (speakerName) speakerName.textContent = currentLine.name;
+    } else {
+        nameTagContainer.style.display = 'none';
+    }
+
+    // 更新对话内容
+    if (dialogueText) dialogueText.textContent = currentLine.text;
+
+    currentLineIndex++;
+}
+
+
 
 // ==============================
 // 3. 核心功能与交互逻辑
