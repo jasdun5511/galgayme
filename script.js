@@ -4,6 +4,8 @@
 const bgm = document.getElementById('gameBgm');
 const menuLayer = document.getElementById('menu-layer');
 const gameplayLayer = document.getElementById('gameplay-layer');
+// 【新增】获取整个名字框的父级元素，方便隐藏它
+const nameTagContainer = document.querySelector('.name-tag'); 
 const speakerName = document.getElementById('speakerName');
 const dialogueText = document.getElementById('dialogueText');
 
@@ -14,14 +16,20 @@ const scenarios = {
     "main_menu": {
         bgm: 'bgm.mp3'
     },
-    "scene1": { // 【场景 1】 (示例：校门口)
+    "scene1": { // 【场景 1】 (校门口 - 经典开局立Flag)
         background: 'scene1_gate.png', 
         bgm: 'scene1_bgm.mp3',         
         dialogue: [
-            { name: '你（陈同学）', text: '呼，今天起得真早... （看向校门）' },
-            { name: '你（陈同学）', text: '等下，那个是... 我们的同班同学，王同学？' },
-            { name: '你（陈同学）', text: '他怎么看起来那么... （同学T恤上写着：不周）' },
-            { name: '齐千玖', text: '毕竟作为NPC，要是让玩家误会的话，可能会被投诉 “为什么她不可攻略，你们是不是想卖DLC？”之类的吧。' } 
+            // name 留空，系统就会自动判定为旁白/心里话并隐藏名字框
+            { name: '', text: '清晨的阳光不算刺眼，学校门口挤满了刚返校的学生。' },
+            { name: '', text: '有穿着旧校服的高二高三学长学姐，也有和我一样、手里攥着新生报到单、背着满满当当双肩包的高一新生。' },
+            { name: '', text: '我叫子涵。此时正背着装满新课本的书包，捏着皱巴巴的报到单，站在高中校门口。' },
+            { name: '', text: '深吸了一口带着书香的空气，我心里满是对高中生活的憧憬。' },
+            { name: '', text: '当场在心里默默立下了开学第一份誓言——' },
+            { name: '', text: '“高中三年，我一定要收心好好奋斗！上课认真听讲不偷懒，争取每次考试都排在前列，目标冲个好大学！”' },
+            { name: '', text: '“当然，作为正常男生，也想在枯燥的高中生活里，遇见一个性格温柔、安安静静的女同学。”' },
+            { name: '', text: '“谈一场纯纯的、普普通通的校园恋爱，放学一起走出校门，课间能说说话，这日子就太完美了！”' },
+            { name: '', text: '带着这样美好的期盼，我迈开步子进入了学校。' }
         ]
     }
 };
@@ -39,7 +47,7 @@ window.addEventListener('load', () => {
     bgm.src = scenarios["main_menu"].bgm;
 });
 
-// BGM 播放解锁机制 (应对浏览器限制)
+// BGM 播放解锁机制
 document.body.addEventListener('click', function() {
     if (bgm.paused && bgm.src) { 
         bgm.play().then(() => {
@@ -52,7 +60,6 @@ document.body.addEventListener('click', function() {
 
 // 开始新游戏
 function startGame() {
-    console.log('初始化场景脚本... 开始【新游戏】！');
     if (menuLayer) menuLayer.classList.add('hidden');
     gameplayLayer.classList.remove('hidden');
     loadScene("scene1");
@@ -64,23 +71,17 @@ function loadScene(sceneId) {
     currentLineIndex = 0;
     const scene = scenarios[sceneId];
 
-    if (!scene) {
-        console.error(`场景 ID: ${sceneId} 未找到。`);
-        return;
-    }
+    if (!scene) return;
 
-    // 设置背景
     if (gameplayLayer && scene.background) {
         gameplayLayer.style.backgroundImage = `url('${scene.background}')`;
     }
 
-    // 切换 BGM
     if (scene.bgm) {
         bgm.src = scene.bgm;
         bgm.play().catch(e => console.warn("BGM 自动播放受限:", e));
     }
 
-    // 显示第一条对话
     showNextDialogueLine();
 }
 
@@ -101,7 +102,17 @@ function showNextDialogueLine() {
 
     const currentLine = scene.dialogue[currentLineIndex];
 
-    if (speakerName) speakerName.textContent = currentLine.name;
+    // 【新增逻辑】判断是否显示名字框
+    if (currentLine.name && currentLine.name.trim() !== "") {
+        // 如果有名字，显示名字框并更新名字
+        nameTagContainer.style.display = 'block';
+        if (speakerName) speakerName.textContent = currentLine.name;
+    } else {
+        // 如果没有名字（旁白/内心独白），隐藏名字框
+        nameTagContainer.style.display = 'none';
+    }
+
+    // 更新对话内容
     if (dialogueText) dialogueText.textContent = currentLine.text;
 
     currentLineIndex++;
@@ -109,7 +120,6 @@ function showNextDialogueLine() {
 
 // 绑定点击推进对话事件
 gameplayLayer.addEventListener('click', function(event) {
-    // 阻止点击快速菜单时推进对话
     if (event.target.closest('.quick-menu')) return;
     showNextDialogueLine();
 });
@@ -123,7 +133,7 @@ quickMenuButtons.forEach(button => {
     });
 });
 
-// 其他主菜单占位功能
+// 主菜单功能
 function loadGame() { alert('打开【读取存档】面板...'); }
 function continueGame() { alert('正在加载最新存档，【继续游戏】...'); }
 function flowchart() { alert('打开【流程图】界面...'); }
