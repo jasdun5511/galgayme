@@ -33,7 +33,7 @@ const scenarios = {
     },
     "scene2": { // 【场景 2】 (看公告栏 - 赶时间)
         background: 'scene2_notice.jpg', 
-        bgm: 'scene1_bgm.mp3', 
+        
         nextScene: 'scene3', 
         dialogue: [
             { name: '', text: '我盯着校门口墙上的报到指引，高一新生要去教学楼三楼的教室报到。' },
@@ -45,7 +45,7 @@ const scenarios = {
     },
     "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
         background: 'scene3_corridor.jpg', 
-        bgm: 'scene2_bump.mp3', 
+     
         nextScene: null, 
         dialogue: [
             { name: '', text: '我只顾着低头看路，避开扎堆聊天的同学……' },
