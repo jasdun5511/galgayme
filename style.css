@@ -5,6 +5,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* 【新增】关闭移动端/浏览器的点击蓝色高亮闪烁 */
+    -webkit-tap-highlight-color: transparent; 
+    /* 【新增】去掉某些浏览器点击时出现的焦点虚线框 */
+    outline: none; 
 }
 
 body {
@@ -12,6 +16,10 @@ body {
     background-color: #000;
     overflow: hidden; /* 防止出现滚动条 */
     user-select: none; /* 防止文字被选中，增加游戏感 */
+    /* 兼容更多的浏览器防止文字选中 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .game-container {
