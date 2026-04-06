@@ -4,7 +4,6 @@
 const bgm = document.getElementById('gameBgm');
 const menuLayer = document.getElementById('menu-layer');
 const gameplayLayer = document.getElementById('gameplay-layer');
-// 【新增】获取整个名字框的父级元素，方便隐藏它
 const nameTagContainer = document.querySelector('.name-tag'); 
 const speakerName = document.getElementById('speakerName');
 const dialogueText = document.getElementById('dialogueText');
@@ -17,9 +16,9 @@ const scenarios = {
         bgm: 'bgm.mp3'
     },
     "scene1": { // 【场景 1】 (校门口 - 经典开局立Flag)
-        background: 'scene1_gate.png', // 占位图：校门口
+        background: 'scene1_gate.png', 
         bgm: 'scene1_bgm.mp3',         
-        nextScene: 'scene2', // 【新增】播完后自动跳转到 scene2
+        nextScene: 'scene2', 
         dialogue: [
             { name: '', text: '清晨的阳光不算刺眼，学校门口挤满了刚返校的学生。' },
             { name: '', text: '有穿着旧校服的高二高三学长学姐，也有和我一样、手里攥着新生报到单、背着满满当当双肩包的高一新生。' },
@@ -33,9 +32,9 @@ const scenarios = {
         ]
     },
     "scene2": { // 【场景 2】 (看公告栏 - 赶时间)
-        background: 'scene2_notice.jpg', // 占位图：公告栏
-        bgm: 'scene1_bgm.mp3', // 可以保持同一首BGM，或者换一首略带急促的
-        nextScene: 'scene3', // 播完后自动跳转到 scene3
+        background: 'scene2_notice.jpg', 
+        bgm: 'scene1_bgm.mp3', 
+        nextScene: 'scene3', 
         dialogue: [
             { name: '', text: '我盯着校门口墙上的报到指引，高一新生要去教学楼三楼的教室报到。' },
             { name: '', text: '而且班主任说八点半就截止签到，再磨蹭就要迟到挨批了。' },
@@ -45,13 +44,13 @@ const scenarios = {
         ]
     },
     "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
-        background: 'scene3_corridor.jpg', // 占位图：教学楼走廊转角
-        bgm: 'scene2_bump.mp3', // 建议在这里换一首音乐，或者加个音效
-        nextScene: null, // 暂时没有后续场景，播完退回主菜单
+        background: 'scene3_corridor.jpg', 
+        bgm: 'scene2_bump.mp3', 
+        nextScene: null, 
         dialogue: [
             { name: '', text: '我只顾着低头看路，避开扎堆聊天的同学……' },
             { name: '', text: '没留意教室门内侧、入口的转角处。' },
-            { name: '', text: '“砰——！”' }, // 自己加了个语气词增加画面感
+            { name: '', text: '“砰——！”' }, 
             { name: '', text: '突然狠狠撞上了一堵又高又挺、带着温热体温的结实胸膛！' }
         ]
     }
@@ -60,54 +59,6 @@ const scenarios = {
 // 游戏状态变量
 let currentSceneId = null;
 let currentLineIndex = 0;
-
-
-// ==============================
-// 以下是需要替换的 showNextDialogueLine 函数
-// ==============================
-
-// 推进下一条对话
-function showNextDialogueLine() {
-    const scene = scenarios[currentSceneId];
-    
-    // 如果当前场景的对话已经播放完毕
-    if (!scene || currentLineIndex >= scene.dialogue.length) {
-        console.log(`场景 [${currentSceneId}] 结束。`);
-        
-        // 【新增逻辑】判断是否有下一个场景
-        if (scene && scene.nextScene) {
-            console.log(`跳转到下一幕: ${scene.nextScene}`);
-            loadScene(scene.nextScene); // 直接加载下一个场景
-        } else {
-            // 如果没有下一个场景了，退回主菜单
-            console.log("全部剧情结束，返回主菜单。");
-            gameplayLayer.classList.add('hidden');
-            menuLayer.classList.remove('hidden');
-            bgm.src = scenarios["main_menu"].bgm;
-            bgm.play();
-            currentSceneId = null;
-            currentLineIndex = 0;
-        }
-        return;
-    }
-
-    const currentLine = scene.dialogue[currentLineIndex];
-
-    // 判断是否显示名字框 (有名字且不为空时显示)
-    if (currentLine.name && currentLine.name.trim() !== "") {
-        nameTagContainer.style.display = 'block';
-        if (speakerName) speakerName.textContent = currentLine.name;
-    } else {
-        nameTagContainer.style.display = 'none';
-    }
-
-    // 更新对话内容
-    if (dialogueText) dialogueText.textContent = currentLine.text;
-
-    currentLineIndex++;
-}
-
-
 
 // ==============================
 // 3. 核心功能与交互逻辑
@@ -144,42 +95,53 @@ function loadScene(sceneId) {
 
     if (!scene) return;
 
+    // 设置背景图
     if (gameplayLayer && scene.background) {
         gameplayLayer.style.backgroundImage = `url('${scene.background}')`;
     }
 
+    // 设置BGM
     if (scene.bgm) {
         bgm.src = scene.bgm;
         bgm.play().catch(e => console.warn("BGM 自动播放受限:", e));
     }
 
+    // 自动显示第一句话
     showNextDialogueLine();
 }
 
-// 推进下一条对话
+// 推进下一条对话 (已剔除重复代码，保留正确的跳转逻辑)
 function showNextDialogueLine() {
     const scene = scenarios[currentSceneId];
+    
+    // 如果当前场景的对话已经播放完毕
     if (!scene || currentLineIndex >= scene.dialogue.length) {
-        console.log("场景结束。");
-        // 场景结束处理：目前退回主菜单
-        gameplayLayer.classList.add('hidden');
-        menuLayer.classList.remove('hidden');
-        bgm.src = scenarios["main_menu"].bgm;
-        bgm.play();
-        currentSceneId = null;
-        currentLineIndex = 0;
+        console.log(`场景 [${currentSceneId}] 结束。`);
+        
+        // 判断是否有下一个场景
+        if (scene && scene.nextScene) {
+            console.log(`跳转到下一幕: ${scene.nextScene}`);
+            loadScene(scene.nextScene); // 加载下一个场景
+        } else {
+            // 没有下一个场景，退回主菜单
+            console.log("全部剧情结束，返回主菜单。");
+            gameplayLayer.classList.add('hidden');
+            menuLayer.classList.remove('hidden');
+            bgm.src = scenarios["main_menu"].bgm;
+            bgm.play();
+            currentSceneId = null;
+            currentLineIndex = 0;
+        }
         return;
     }
 
     const currentLine = scene.dialogue[currentLineIndex];
 
-    // 【新增逻辑】判断是否显示名字框
+    // 判断是否显示名字框
     if (currentLine.name && currentLine.name.trim() !== "") {
-        // 如果有名字，显示名字框并更新名字
         nameTagContainer.style.display = 'block';
         if (speakerName) speakerName.textContent = currentLine.name;
     } else {
-        // 如果没有名字（旁白/内心独白），隐藏名字框
         nameTagContainer.style.display = 'none';
     }
 
@@ -204,7 +166,7 @@ quickMenuButtons.forEach(button => {
     });
 });
 
-// 主菜单功能
+// 主菜单功能占位
 function loadGame() { alert('打开【读取存档】面板...'); }
 function continueGame() { alert('正在加载最新存档，【继续游戏】...'); }
 function flowchart() { alert('打开【流程图】界面...'); }
