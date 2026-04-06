@@ -115,17 +115,20 @@ body {
 /* 角色名字标签 (Name Tag) */
 .name-tag {
     position: absolute;
-    top: 35%; /* 根据整体高度稍微调整名字框位置 */
+    top: 35%; 
     left: 5vw;
     padding: 3px 20px;
     background-color: rgba(20, 20, 20, 0.7); 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     border-radius: 2px;
-    font-size: 18px;
+    font-size: 15px; /* 【修改这里】从 18px 缩小到 15px */
     font-weight: bold;
     color: #eee;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    transition: opacity 0.2s; /* 名字框显示/隐藏过渡更平滑 */
 }
+
+
 
 /* 文本内容区域 (Text Content) */
 .text-content {
@@ -133,15 +136,18 @@ body {
     margin-bottom: 10px;
 }
 
+/* ...中间内容保持不变... */
+
 #dialogueText {
     display: inline;
-    font-size: 18px; 
-    font-weight: 600; 
+    font-size: 16px; /* 【修改这里】主文本从 18px 缩小到 16px，更贴近日式 Galgame 细腻感 */
+    font-weight: 500; /* 把字重稍微调轻一点点，不要过粗 */
     color: #f0f0f0;
     line-height: 1.8; 
     letter-spacing: 1px; 
     text-shadow: 1px 1px 2px #000; 
 }
+
 
 /* 继续箭头 (Next Arrow) */
 .next-arrow {
