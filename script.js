@@ -1,5 +1,5 @@
 // ==============================
-// 1. 核心元素获取
+// 1. 核心元素获取与动态初始化
 // ==============================
 const bgm = document.getElementById('gameBgm');
 const menuLayer = document.getElementById('menu-layer');
@@ -7,6 +7,18 @@ const gameplayLayer = document.getElementById('gameplay-layer');
 const nameTagContainer = document.querySelector('.name-tag'); 
 const speakerName = document.getElementById('speakerName');
 const dialogueText = document.getElementById('dialogueText');
+
+// 【自动化升级】如果 HTML 里没有人物立绘标签，JS 自动帮你建一个并插进去
+let characterSprite = document.getElementById('characterSprite');
+if (!characterSprite && gameplayLayer) {
+    characterSprite = document.createElement('img');
+    characterSprite.id = 'characterSprite';
+    characterSprite.className = 'character-sprite hidden';
+    characterSprite.alt = 'character';
+    // 把它插入到对话框的上一层
+    const dialogBox = document.querySelector('.dialogue-box');
+    gameplayLayer.insertBefore(characterSprite, dialogBox);
+}
 
 // ==============================
 // 2. 剧情数据分类 (Scenario Data)
@@ -33,7 +45,6 @@ const scenarios = {
     },
     "scene2": { // 【场景 2】 (看公告栏 - 赶时间)
         background: 'scene2_notice.jpg', 
-        
         nextScene: 'scene3', 
         dialogue: [
             { name: '', text: '我盯着校门口墙上的报到指引，高一新生要去教学楼三楼的教室报到。' },
@@ -45,13 +56,17 @@ const scenarios = {
     },
     "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
         background: 'scene3_corridor.jpg', 
-     
         nextScene: null, 
         dialogue: [
             { name: '', text: '我只顾着低头看路，避开扎堆聊天的同学……' },
             { name: '', text: '没留意教室门内侧、入口的转角处。' },
             { name: '', text: '“砰——！”' }, 
-            { name: '', text: '突然狠狠撞上了一堵又高又挺、带着温热体温的结实胸膛！' }
+            { name: '', text: '突然狠狠撞上了一堵又高又挺、带着温热体温的结实胸膛！' },
+            // 加入立绘 (figure: 'boy.png')，你可以把图片名字换成你实际的透明背景PNG图片
+            { name: '', text: '他的手掌很大，指尖带着点温度，扶着我胳膊的时候特别轻，生怕弄疼我。', figure: 'boy.png' },
+            { name: '', text: '低沉的嗓音里满是紧张，连语气都软乎乎的，和他高大强劲的身材完全反差：', figure: 'boy.png' },
+            { name: '？？？', text: '“同学，你没事吧？是不是撞疼胸口了？我刚在这等朋友，没看见你跑过来，对不起啊！”', figure: 'boy.png' },
+            { name: '', text: '（好可爱的男生~）', figure: 'boy.png' }
         ]
     }
 };
@@ -110,7 +125,7 @@ function loadScene(sceneId) {
     showNextDialogueLine();
 }
 
-// 推进下一条对话 (已剔除重复代码，保留正确的跳转逻辑)
+// 推进下一条对话
 function showNextDialogueLine() {
     const scene = scenarios[currentSceneId];
     
@@ -118,10 +133,13 @@ function showNextDialogueLine() {
     if (!scene || currentLineIndex >= scene.dialogue.length) {
         console.log(`场景 [${currentSceneId}] 结束。`);
         
+        // 隐藏人物立绘（防止下一个场景开头还有上个场景的人）
+        if (characterSprite) characterSprite.classList.add('hidden');
+
         // 判断是否有下一个场景
         if (scene && scene.nextScene) {
             console.log(`跳转到下一幕: ${scene.nextScene}`);
-            loadScene(scene.nextScene); // 加载下一个场景
+            loadScene(scene.nextScene); 
         } else {
             // 没有下一个场景，退回主菜单
             console.log("全部剧情结束，返回主菜单。");
@@ -143,6 +161,14 @@ function showNextDialogueLine() {
         if (speakerName) speakerName.textContent = currentLine.name;
     } else {
         nameTagContainer.style.display = 'none';
+    }
+
+    // 判断是否显示人物立绘
+    if (currentLine.figure && characterSprite) {
+        characterSprite.src = currentLine.figure; 
+        characterSprite.classList.remove('hidden'); 
+    } else if (characterSprite) {
+        characterSprite.classList.add('hidden'); 
     }
 
     // 更新对话内容
