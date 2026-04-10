@@ -54,7 +54,7 @@ const scenarios = {
             { name: '', text: '心里还不停念叨：“先顺利报到，找好教室，恋爱这事慢慢来，咱先做个听话的好学生！”' }
         ]
     },
-    "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
+        "scene3": { // 【场景 3】 (转角撞人 - 宿命的相遇)
         background: 'scene3_corridor.jpg', 
         nextScene: null, 
         dialogue: [
@@ -62,13 +62,15 @@ const scenarios = {
             { name: '', text: '没留意教室门内侧、入口的转角处。' },
             { name: '', text: '“砰——！”' }, 
             { name: '', text: '突然狠狠撞上了一堵又高又挺、带着温热体温的结实胸膛！' },
-            // 加入立绘 (figure: 'boy.png')，你可以把图片名字换成你实际的透明背景PNG图片
             { name: '', text: '他的手掌很大，指尖带着点温度，扶着我胳膊的时候特别轻，生怕弄疼我。', figure: 'boy.png' },
             { name: '', text: '低沉的嗓音里满是紧张，连语气都软乎乎的，和他高大强劲的身材完全反差：', figure: 'boy.png' },
             { name: '？？？', text: '“同学，你没事吧？是不是撞疼胸口了？我刚在这等朋友，没看见你跑过来，对不起啊！”', figure: 'boy.png' },
-            { name: '', text: '（好可爱的男生~）', figure: 'boy.png' }
+            
+            // 【修改这里】给这句心里话加上了名字
+            { name: '？？？', text: '（好可爱的男生~）', figure: 'boy.png' } 
         ]
     }
+
 };
 
 // 游戏状态变量
