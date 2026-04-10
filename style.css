@@ -5,9 +5,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* 【新增】关闭移动端/浏览器的点击蓝色高亮闪烁 */
+    /* 关闭移动端/浏览器的点击蓝色高亮闪烁 */
     -webkit-tap-highlight-color: transparent; 
-    /* 【新增】去掉某些浏览器点击时出现的焦点虚线框 */
+    /* 去掉某些浏览器点击时出现的焦点虚线框 */
     outline: none; 
 }
 
@@ -16,7 +16,6 @@ body {
     background-color: #000;
     overflow: hidden; /* 防止出现滚动条 */
     user-select: none; /* 防止文字被选中，增加游戏感 */
-    /* 兼容更多的浏览器防止文字选中 */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -45,14 +44,13 @@ body {
 .layer.hidden {
     display: none !important;
     opacity: 0;
-    pointer-events: none; /* 防止隐藏层干扰点击 */
+    pointer-events: none; 
 }
 
 /* ==============================
    2. 主菜单样式 (Main Menu)
    ============================== */
 #menu-layer {
-    /* 你的主菜单背景图片 */
     background-image: url('bg.png'); 
     z-index: 10;
 }
@@ -75,7 +73,7 @@ body {
 .menu button {
     background: none;
     border: none;
-    color: #8b3a2b; /* 提取深红/棕色 */
+    color: #8b3a2b; 
     font-size: 26px;
     font-weight: bold;
     cursor: pointer;
@@ -97,7 +95,7 @@ body {
 }
 
 /* ==============================
-   3. 游戏对话框样式 (Dialogue Box) - 调整高度与菜单版
+   3. 游戏对话框样式 (Dialogue Box)
    ============================== */
 #gameplay-layer {
     z-index: 5;
@@ -110,13 +108,13 @@ body {
     bottom: 0; 
     left: 0;
     width: 100%; 
-    height: 40vh; /* 稍微拉高一点渐变区域，让过渡更自然 */
+    height: 40vh; 
     background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.75) 40%, transparent 100%); 
     padding: 0 5vw; 
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* 内容靠下对齐 */
-    padding-bottom: 70px; /* 【修改这里】增加底部的留白，把文字往上顶大约一个字的距离 */
+    justify-content: flex-end; 
+    padding-bottom: 70px; 
     z-index: 100;
 }
 
@@ -129,35 +127,30 @@ body {
     background-color: rgba(20, 20, 20, 0.7); 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     border-radius: 2px;
-    font-size: 15px; /* 【修改这里】从 18px 缩小到 15px */
+    font-size: 15px; 
     font-weight: bold;
     color: #eee;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    transition: opacity 0.2s; /* 名字框显示/隐藏过渡更平滑 */
+    transition: opacity 0.2s; 
 }
 
-
-
-/* 文本内容区域 (Text Content) */
+/* 文本内容区域 */
 .text-content {
     width: 85%; 
     margin-bottom: 10px;
 }
 
-/* ...中间内容保持不变... */
-
 #dialogueText {
     display: inline;
-    font-size: 16px; /* 【修改这里】主文本从 18px 缩小到 16px，更贴近日式 Galgame 细腻感 */
-    font-weight: 500; /* 把字重稍微调轻一点点，不要过粗 */
+    font-size: 16px; 
+    font-weight: 500; 
     color: #f0f0f0;
     line-height: 1.8; 
     letter-spacing: 1px; 
     text-shadow: 1px 1px 2px #000; 
 }
 
-
-/* 继续箭头 (Next Arrow) */
+/* 继续箭头 */
 .next-arrow {
     display: inline-block;
     margin-left: 8px;
@@ -172,21 +165,21 @@ body {
     to { opacity: 1; transform: translateX(3px); }
 }
 
-/* 底部功能按钮 (Quick Menu) - 完美还原到右下角 */
+/* 底部功能按钮 */
 .quick-menu {
     position: absolute;
-    bottom: 20px; /* 固定在距离屏幕最下方 20px 的位置 */
-    right: 5vw;   /* 靠右对齐 */
+    bottom: 20px; 
+    right: 5vw;   
     display: flex;
-    gap: 15px;    /* 按钮之间的间距 */
-    z-index: 110; /* 确保层级最高，不会被背景渐变挡住 */
+    gap: 15px;    
+    z-index: 110; 
 }
 
 .quick-menu button {
     background: none;
     border: none;
     color: #999; 
-    font-size: 13px; /* 字体稍微调大一点点保证清晰度 */
+    font-size: 13px; 
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -196,6 +189,26 @@ body {
 
 .quick-menu button:hover {
     color: #fff;
-    transform: scale(1.1); /* 鼠标放上去稍微放大一点点反馈 */
+    transform: scale(1.1); 
     text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+/* ==============================
+   4. 人物立绘样式 (Character Sprite)
+   ============================== */
+.character-sprite {
+    position: absolute;
+    bottom: 0; /* 贴紧底部 */
+    left: 50%;
+    transform: translateX(-50%); /* 水平居中 */
+    height: 85vh; /* 高度占屏幕85% */
+    object-fit: contain; /* 保持比例 */
+    z-index: 50; /* 在背景(5)之上，对话框(100)之下 */
+    pointer-events: none; /* 防止挡住点击推进剧情 */
+    transition: opacity 0.3s ease; /* 淡入淡出 */
+}
+
+.character-sprite.hidden {
+    display: none !important;
+    opacity: 0;
 }
