@@ -195,17 +195,20 @@ body {
 
 /* ==============================
    4. 人物立绘样式 (Character Sprite)
-   ============================== */
+   ============================= */
 .character-sprite {
     position: absolute;
-    bottom: 0; /* 贴紧底部 */
+    bottom: -10vh; /* 【修改这里】让人物底部往下埋一点，露出上半身，这样看起来不会太顶着天 */
     left: 50%;
-    transform: translateX(-50%); /* 水平居中 */
-    height: 85vh; /* 高度占屏幕85% */
-    object-fit: contain; /* 保持比例 */
-    z-index: 50; /* 在背景(5)之上，对话框(100)之下 */
-    pointer-events: none; /* 防止挡住点击推进剧情 */
-    transition: opacity 0.3s ease; /* 淡入淡出 */
+    transform: translateX(-50%); 
+    
+    /* 【修改这里】把高度从 85vh 缩小到 60vh。你可以根据感觉继续调这个数字 */
+    height: 60vh; 
+    
+    object-fit: contain; 
+    z-index: 50; 
+    pointer-events: none; 
+    transition: opacity 0.3s ease; 
 }
 
 .character-sprite.hidden {
